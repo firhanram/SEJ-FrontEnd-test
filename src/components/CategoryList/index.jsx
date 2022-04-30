@@ -1,7 +1,6 @@
 import CategoryItem from 'components/CategoryItem';
 import CategorySkeleton from 'components/CategorySkeleton';
 import { useCategory } from 'features/categories/queries';
-import React from 'react';
 
 function CategoryList() {
     const categoryQuery = useCategory();

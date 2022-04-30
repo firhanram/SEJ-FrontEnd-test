@@ -1,3 +1,4 @@
 import Home from './Home';
+import BooksByCategory from './BooksByCategory';
 
-export { Home };
+export { Home, BooksByCategory };

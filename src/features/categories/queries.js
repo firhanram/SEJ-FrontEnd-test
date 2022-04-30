@@ -1,9 +1,9 @@
-import endpoint from 'app/endpoints';
+import endpoints from 'app/endpoints';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 
 const fetchCategories = async () => {
-    const response = await axios.get(`${endpoint.categories}`);
+    const response = await axios.get(`${endpoints.categories}`);
 
     return response.data;
 };
