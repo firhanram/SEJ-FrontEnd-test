@@ -3,8 +3,22 @@ import Modal from 'components/Modal';
 import { toMinutes } from 'utils/helper';
 import PropTypes from 'prop-types';
 import closeIcon from 'assets/images/icons8-close-50.png';
+import { useBookmarkContext } from 'contexts/bookmarkContext';
 
-function ModalDetailBook({ open, onClose, coverUrl, title, authors, sections, audioLength, description }) {
+function ModalDetailBook({
+    open,
+    onClose,
+    id,
+    coverUrl,
+    title,
+    authors,
+    sections,
+    audioLength,
+    description,
+    onBookmark,
+}) {
+    const { isBookAdded } = useBookmarkContext();
+
     return (
         <Modal open={open} onClose={onClose}>
             <div className="w-11/12 max-w-lg bg-white rounded absolute transform -translate-y-1/2 top-1/2 left-1/2 -translate-x-1/2 overflow-y-scroll p-8 h-5/6 ">
@@ -15,6 +29,17 @@ function ModalDetailBook({ open, onClose, coverUrl, title, authors, sections, au
                 </div>
                 <div className="flex justify-center">
                     <img src={coverUrl} alt={title} className="w-80" />
+                </div>
+                <div className="flex justify-center mt-4">
+                    <button
+                        type="button"
+                        onClick={onBookmark}
+                        className={`focus:outline-none p-2 font-semibold ${
+                            isBookAdded(id) ? 'bg-slate-800 text-white' : 'text-slate-800 border border-slate-900'
+                        }  rounded-md`}
+                    >
+                        Bookmark this book
+                    </button>
                 </div>
                 <div className="mt-10">
                     <h3 className="text-lg font-bold text-slate-800">{title}</h3>
@@ -52,6 +77,7 @@ function ModalDetailBook({ open, onClose, coverUrl, title, authors, sections, au
 ModalDetailBook.propTypes = {
     onClose: PropTypes.func.isRequired,
     open: PropTypes.bool.isRequired,
+    id: PropTypes.number.isRequired,
     coverUrl: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -62,6 +88,7 @@ ModalDetailBook.propTypes = {
         })
     ).isRequired,
     audioLength: PropTypes.number.isRequired,
+    onBookmark: PropTypes.func.isRequired,
 };
 
 export default ModalDetailBook;

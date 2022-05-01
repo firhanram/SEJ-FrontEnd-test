@@ -1,9 +1,10 @@
 import BookLists from 'components/BookLists';
+import Header from 'components/Header';
 
 function BooksByCategory() {
     return (
         <main>
-            <div className="bg-slate-900 w-full h-32" />
+            <Header />
             <BookLists />
         </main>
     );

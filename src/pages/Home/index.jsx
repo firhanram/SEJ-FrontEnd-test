@@ -1,11 +1,13 @@
 import CategoryList from 'components/CategoryList';
+import MyBookmarks from 'components/MyBookmarks';
 
 function Home() {
     return (
-        <main className="w-full h-screen flex flex-col items-center justify-center">
-            <div className="max-w-screen-xl mx-auto py-20">
+        <main className="w-full h-screen">
+            <section className="max-w-screen-xl mx-auto py-20">
                 <CategoryList />
-            </div>
+            </section>
+            <MyBookmarks />
         </main>
     );
 }

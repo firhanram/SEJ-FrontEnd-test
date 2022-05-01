@@ -13,13 +13,17 @@ import notFoundImg from 'assets/images/not-found.png';
 import img404 from 'assets/images/404.png';
 import { useToggle } from 'utils/hooks/useToggle';
 import ModalDetailBook from 'components/ModalDetailBook';
+import { useBookmarkContext } from 'contexts/bookmarkContext';
 
 function BookLists() {
     const [page] = useState(1);
     const [booksResult, setBooksResult] = useState([]);
     const [querySearch, setQuerySearch] = useState('');
-    const [open, setOpen] = useToggle();
     const [selectedBook, setSelectedBook] = useState(0);
+
+    const [open, setOpen] = useToggle();
+
+    const { addBookmark, removeBookmark, isBookAdded } = useBookmarkContext();
 
     const debounceSearch = useDebounce(querySearch, 500);
 
@@ -33,6 +37,7 @@ function BookLists() {
             size: 20,
         },
         onSuccess: (res) => {
+            console.log(res);
             setBooksResult(res.data);
         },
     });
@@ -82,16 +87,27 @@ function BookLists() {
                                 />
                             ))}
                         </div>
-                        <ModalDetailBook
-                            open={open}
-                            onClose={setOpen}
-                            coverUrl={booksResult[selectedBook]?.cover_url}
-                            title={booksResult[selectedBook]?.title}
-                            authors={booksResult[selectedBook]?.authors}
-                            sections={booksResult[selectedBook]?.sections}
-                            audioLength={booksResult[selectedBook]?.audio_length}
-                            description={booksResult[selectedBook]?.description}
-                        />
+                        {booksResult.length > 0 ? (
+                            <ModalDetailBook
+                                open={open}
+                                onClose={setOpen}
+                                key={booksResult[selectedBook].id}
+                                coverUrl={booksResult[selectedBook]?.cover_url}
+                                title={booksResult[selectedBook]?.title}
+                                authors={booksResult[selectedBook]?.authors}
+                                sections={booksResult[selectedBook]?.sections}
+                                audioLength={booksResult[selectedBook]?.audio_length}
+                                description={booksResult[selectedBook]?.description}
+                                id={booksResult[selectedBook]?.id}
+                                onBookmark={() => {
+                                    if (isBookAdded(booksResult[selectedBook].id)) {
+                                        return removeBookmark(booksResult[selectedBook].id);
+                                    }
+
+                                    addBookmark(booksResult[selectedBook]);
+                                }}
+                            />
+                        ) : null}
                     </>
                 );
             }
@@ -121,8 +137,8 @@ function BookLists() {
     return (
         <>
             <SearchBooksInput onChange={handleSearchChange} />
-            <section className="my-10">
-                <div className="max-w-screen-xl mx-auto py-20 px-4">{renderBooks()}</div>
+            <section className="my-4">
+                <div className="max-w-screen-xl mx-auto px-4">{renderBooks()}</div>
             </section>
         </>
     );
