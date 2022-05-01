@@ -11,3 +11,7 @@ body {
     overflow-x: hidden;
     @apply bg-sky-50;
 }
+
+button:disabled {
+    @apply bg-gray-200 cursor-not-allowed;
+}

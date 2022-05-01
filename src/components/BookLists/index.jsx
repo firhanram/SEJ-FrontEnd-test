@@ -14,9 +14,10 @@ import img404 from 'assets/images/404.png';
 import { useToggle } from 'utils/hooks/useToggle';
 import ModalDetailBook from 'components/ModalDetailBook';
 import { useBookmarkContext } from 'contexts/bookmarkContext';
+import Pagination from 'components/Pagination';
 
 function BookLists() {
-    const [page] = useState(1);
+    const [page, setPage] = useState(1);
     const [booksResult, setBooksResult] = useState([]);
     const [querySearch, setQuerySearch] = useState('');
     const [selectedBook, setSelectedBook] = useState(0);
@@ -37,7 +38,6 @@ function BookLists() {
             size: 20,
         },
         onSuccess: (res) => {
-            console.log(res);
             setBooksResult(res.data);
         },
     });
@@ -87,6 +87,17 @@ function BookLists() {
                                 />
                             ))}
                         </div>
+                        <Pagination
+                            page={page}
+                            totalSizePerPage={booksQuery.data.data.length}
+                            totalSize={10}
+                            onNextPage={() => {
+                                setPage((prev) => prev + 1);
+                            }}
+                            onPrevPage={() => {
+                                setPage((prev) => prev - 1);
+                            }}
+                        />
                         {booksResult.length > 0 ? (
                             <ModalDetailBook
                                 open={open}
@@ -126,7 +137,7 @@ function BookLists() {
                     <h3 className="text-2xl font-bold text-slate-800 text-center mt-4">
                         {booksQuery.error.response.status}
                     </h3>
-                    <p className="text-slate-800 text-xl text-center">Something Went Wrong</p>
+                    <p className="text-slate-800 text-xl text-center">Book Not Found</p>
                 </div>
             );
         }
