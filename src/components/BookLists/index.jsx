@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable consistent-return */
 /* eslint-disable radix */
 /* eslint-disable no-nested-ternary */
@@ -10,11 +11,15 @@ import { useParams } from 'react-router-dom';
 import { useDebounce } from 'utils/hooks/useDebounce';
 import notFoundImg from 'assets/images/not-found.png';
 import img404 from 'assets/images/404.png';
+import { useToggle } from 'utils/hooks/useToggle';
+import ModalDetailBook from 'components/ModalDetailBook';
 
 function BookLists() {
     const [page] = useState(1);
     const [booksResult, setBooksResult] = useState([]);
     const [querySearch, setQuerySearch] = useState('');
+    const [open, setOpen] = useToggle();
+    const [selectedBook, setSelectedBook] = useState(0);
 
     const debounceSearch = useDebounce(querySearch, 500);
 
@@ -62,16 +67,32 @@ function BookLists() {
         if (booksQuery.isSuccess) {
             if (booksResult?.length > 0 || booksQuery.data.data.length > 0) {
                 return (
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
-                        {booksResult?.map((book) => (
-                            <BookItem
-                                key={book.id}
-                                coverUrl={book.cover_url}
-                                title={book.title}
-                                authors={book.authors}
-                            />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-8">
+                            {booksResult?.map((book, index) => (
+                                <BookItem
+                                    key={book.id}
+                                    coverUrl={book.cover_url}
+                                    title={book.title}
+                                    authors={book.authors}
+                                    onClick={() => {
+                                        setOpen();
+                                        setSelectedBook(index);
+                                    }}
+                                />
+                            ))}
+                        </div>
+                        <ModalDetailBook
+                            open={open}
+                            onClose={setOpen}
+                            coverUrl={booksResult[selectedBook]?.cover_url}
+                            title={booksResult[selectedBook]?.title}
+                            authors={booksResult[selectedBook]?.authors}
+                            sections={booksResult[selectedBook]?.sections}
+                            audioLength={booksResult[selectedBook]?.audio_length}
+                            description={booksResult[selectedBook]?.description}
+                        />
+                    </>
                 );
             }
             return (
